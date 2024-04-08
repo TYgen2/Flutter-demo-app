@@ -71,114 +71,118 @@ class _ArtTileState extends State<ArtTile> {
           }
         }
 
-        return Container(
-          margin: const EdgeInsets.only(left: 25),
-          width: 280,
-          decoration: BoxDecoration(
-            color: Colors.black,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            children: [
-              // artworks
-              GestureDetector(
-                onLongPress: () {
-                  (artName.contains(widget.art.name) == false)
-                      ? Navigator.push(context, MaterialPageRoute(builder: (_) {
-                          return FullScreenArt(art: widget.art);
-                        }))
-                      : Navigator.push(context, MaterialPageRoute(builder: (_) {
-                          return FullScreenFavourite(art: widget.art);
-                        }));
-                },
-                child: Image.asset(
-                  widget.art.imagePath,
-                  fit: BoxFit.cover,
-                  height: 420,
-                  width: 400,
-                ),
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            return Container(
+              margin: const EdgeInsets.only(left: 25),
+              width: 280,
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(12),
               ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // artworks, fixed size with 88% of the art tile
+                  GestureDetector(
+                    onLongPress: () {
+                      (artName.contains(widget.art.name) == false)
+                          ? Navigator.push(context,
+                              MaterialPageRoute(builder: (_) {
+                              return FullScreenArt(art: widget.art);
+                            }))
+                          : Navigator.push(context,
+                              MaterialPageRoute(builder: (_) {
+                              return FullScreenFavourite(art: widget.art);
+                            }));
+                    },
+                    child: Image.asset(widget.art.imagePath,
+                        fit: BoxFit.cover,
+                        height: constraints.maxHeight * 0.88),
+                  ),
 
-              const SizedBox(height: 10),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.art.name,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Text(widget.art.artist,
-                                style: const TextStyle(color: Colors.white)),
-                          ],
-                        ),
-
-                        // Favourite button
-                        const SizedBox(width: 142),
-
-                        GestureDetector(
-                          onTap: (user.isGuest ==
-                                  true) // Favourite function not avaiable for guest mode
-                              ? () => Fluttertoast.showToast(
-                                    msg:
-                                        'Sign in to use the Favourite function.',
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.CENTER,
-                                  )
-                              : (artName.contains(widget.art.name) == false)
-                                  ? () async {
-                                      // Default is not favourited yet
-                                      // setState(() => widget.art.isFav = true);
-                                      widget.onTap!();
-
-                                      await DatabaseService(uid: user.uid)
-                                          .updateUserData(widget.art);
-                                    }
-                                  : () async {
-                                      // Favourited, now unfavourite it
-
-                                      // Put the delete function above the setState for
-                                      // isFav, because the whole Art object have to be
-                                      // exactly the same in order to delete in firebase
-                                      await DatabaseService(uid: user.uid)
-                                          .deleteUserData(widget.art);
-
-                                      // setState(() => widget.art.isFav = false);
-                                      // removeArtFromFavourite();
-                                      Fluttertoast.showToast(
-                                        msg: 'Successfully deleted',
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.CENTER,
-                                      );
-                                    },
-                          child: Icon(
-                            // Determined by favourited or unfavourite
-                            (artName.contains(widget.art.name) == false)
-                                ? Icons.favorite_border
-                                : Icons.favorite,
-                            color: Colors.redAccent,
-
-                            // (widget.art.isFav == false)
-                            //     ? Icons.favorite_border
-                            //     : Icons.favorite,
-                            // color: Colors.redAccent,
+                  // info black bar, fixed size with 12% of the art tile
+                  Container(
+                    color: Colors.transparent,
+                    height: constraints.maxHeight * (1 - 0.88),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 18),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                widget.art.name,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(widget.art.artist,
+                                  style: const TextStyle(color: Colors.white)),
+                            ],
                           ),
-                        ),
-                      ],
+
+                          // Favourite button
+
+                          GestureDetector(
+                            onTap: (user.isGuest ==
+                                    true) // Favourite function not avaiable for guest mode
+                                ? () => Fluttertoast.showToast(
+                                      msg:
+                                          'Sign in to use the Favourite function.',
+                                      toastLength: Toast.LENGTH_LONG,
+                                      gravity: ToastGravity.CENTER,
+                                    )
+                                : (artName.contains(widget.art.name) == false)
+                                    ? () async {
+                                        // Default is not favourited yet
+                                        // setState(() => widget.art.isFav = true);
+                                        widget.onTap!();
+
+                                        await DatabaseService(uid: user.uid)
+                                            .updateUserData(widget.art);
+                                      }
+                                    : () async {
+                                        // Favourited, now unfavourite it
+
+                                        // Put the delete function above the setState for
+                                        // isFav, because the whole Art object have to be
+                                        // exactly the same in order to delete in firebase
+                                        await DatabaseService(uid: user.uid)
+                                            .deleteUserData(widget.art);
+
+                                        // setState(() => widget.art.isFav = false);
+                                        // removeArtFromFavourite();
+                                        Fluttertoast.showToast(
+                                          msg: 'Successfully deleted',
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.CENTER,
+                                        );
+                                      },
+                            child: Icon(
+                              // Determined by favourited or unfavourite
+                              (artName.contains(widget.art.name) == false)
+                                  ? Icons.favorite_border
+                                  : Icons.favorite,
+                              color: Colors.redAccent,
+
+                              // (widget.art.isFav == false)
+                              //     ? Icons.favorite_border
+                              //     : Icons.favorite,
+                              // color: Colors.redAccent,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         );
       },
     );

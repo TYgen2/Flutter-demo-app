@@ -28,7 +28,7 @@ class _FavouritePageState extends State<FavouritePage> {
             children: [
               // heading
               const Text(
-                'My Favourites❤',
+                'My Favourites ❤',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 24,
