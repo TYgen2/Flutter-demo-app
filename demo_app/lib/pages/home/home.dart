@@ -3,6 +3,7 @@ import 'package:demo_app/pages/about_page.dart';
 import 'package:demo_app/pages/art_page.dart';
 import 'package:demo_app/pages/favourite_page.dart';
 import 'package:demo_app/pages/intro.dart';
+import 'package:demo_app/pages/random.dart';
 import 'package:demo_app/pages/search.dart';
 import 'package:demo_app/services/auth.dart';
 import 'package:demo_app/theme/theme_provider.dart';
@@ -177,7 +178,28 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
-            const SizedBox(height: 200),
+
+            // Random function
+            Padding(
+              padding: const EdgeInsets.only(left: 25),
+              child: ListTile(
+                leading: const Icon(CupertinoIcons.shuffle),
+                title: const Text('Random',
+                    style: TextStyle(
+                      color: Colors.white,
+                    )),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              const RandomPage()));
+                },
+              ),
+            ),
+
+            const SizedBox(height: 100),
 
             // Back to home for guest mode, log out for signed in user
             Padding(

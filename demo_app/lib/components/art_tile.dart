@@ -96,6 +96,39 @@ class _ArtTileState extends State<ArtTile> {
                               return FullScreenFavourite(art: widget.art);
                             }));
                     },
+                    onDoubleTap: (user.isGuest ==
+                            true) // Favourite function not avaiable for guest mode
+                        ? () => Fluttertoast.showToast(
+                              msg: 'Sign in to use the Favourite function.',
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.CENTER,
+                            )
+                        : (artName.contains(widget.art.name) == false)
+                            ? () async {
+                                // Default is not favourited yet
+                                // setState(() => widget.art.isFav = true);
+                                widget.onTap!();
+
+                                await DatabaseService(uid: user.uid)
+                                    .updateUserData(widget.art);
+                              }
+                            : () async {
+                                // Favourited, now unfavourite it
+
+                                // Put the delete function above the setState for
+                                // isFav, because the whole Art object have to be
+                                // exactly the same in order to delete in firebase
+                                await DatabaseService(uid: user.uid)
+                                    .deleteUserData(widget.art);
+
+                                // setState(() => widget.art.isFav = false);
+                                // removeArtFromFavourite();
+                                Fluttertoast.showToast(
+                                  msg: 'Successfully deleted',
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                );
+                              },
                     child: Image.asset(widget.art.imagePath,
                         fit: BoxFit.cover,
                         height: constraints.maxHeight * 0.88),
