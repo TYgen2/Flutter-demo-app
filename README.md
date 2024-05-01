@@ -1,5 +1,15 @@
-# Screenshots from app
+# Gallery App (Flutter, Firebase)
+- Built with a user login function (email & password, anonymously)
+- Add to favourites
+- Search by name or artist name
+- Light / Dark mode
+- Random art
 
+Currently learning **React Native**. Trying to built the same app with some improvements.
+- Cleaner drawer content
+- Using Firebase storage to store the Arts, instead of storing locally in Flutter
+
+## Screenshots from app
 ### *I do not own any of the arts. This app is just for learning purpose.*
 ### Credit: @TorinoAqua on X, @jeanbeansprout on IG
 <img src="https://github.com/TYgen2/Flutter-demo-app/assets/93910466/b6edd0f1-f040-4edd-a900-450d18b70997" width="216" height="384"/>
