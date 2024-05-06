@@ -7,6 +7,7 @@
 
 Currently learning **React Native**. Trying to built the same app with some improvements.
 - Cleaner drawer content
+- Better flow of data passing
 - Using Firebase storage to store the Arts, instead of storing locally in Flutter
 
 ## Screenshots from app
